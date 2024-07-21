@@ -1,7 +1,7 @@
 <?php
 error_reporting(0);
 include('../dbconnection.php');
-
+include('../SessionCheck.php');
 $id = $_GET['id'];
 if (isset($_POST['Update'])) 
 {
@@ -47,6 +47,16 @@ if (isset($_POST['Update']))
 		$query = "Update photos
 			SET format='$i_format',width=$i_width,height=$i_height, relativepath = 'img/$newfilename'
 			WHERE photo_id=$id";
+		$stmt = $conn->prepare($query);
+		$stmt->execute();
+	}
+
+	$query = "delete from photosCategories where photo_id=$id";
+	$stmt = $conn->prepare($query);
+	$stmt->execute();
+
+	foreach ($_POST['categoryIds'] as $catId) {
+		$query = "Insert into photosCategories (photo_id, Category_id) Values ($id, $catId)";
 		$stmt = $conn->prepare($query);
 		$stmt->execute();
 	}

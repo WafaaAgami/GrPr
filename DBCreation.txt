@@ -25,4 +25,16 @@ CREATE TABLE photos (
   views int NOT NULL,
   PRIMARY KEY (photo_id) 
 );
+CREATE TABLE photosCategories (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    photo_id INT,
+    Category_id INT,
+    FOREIGN KEY (photo_id) REFERENCES photos(photo_id)
+        ON DELETE SET NULL
+        ON UPDATE CASCADE,
+    FOREIGN KEY (Category_id) REFERENCES categories(item_id)
+        ON DELETE SET NULL
+        ON UPDATE CASCADE
+);
+
 

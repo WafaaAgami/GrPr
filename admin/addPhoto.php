@@ -1,7 +1,6 @@
 <?php
 error_reporting(0);
 include('../dbconnection.php');
-
 if (isset($_POST['Add'])) 
 {
     $i_title = $_POST['title'];
@@ -35,7 +34,14 @@ if (isset($_POST['Add']))
 	$query = "INSERT INTO photos(title,license,width,height,views, format, created_date, relativepath ) VALUES ('$i_title', '$i_license', $i_width, $i_height, $i_views, '$i_format',NOW(), 'img/$newfilename')";
 	$stmt = $conn->prepare($query);
 	$stmt->execute();
-	header("Location: photos.php");
+	$last_id = $conn->lastInsertId();
+
+	foreach ($_POST['categoryIds'] as $catId) {
+		$query = "Insert into photosCategories (photo_id, Category_id) Values ($last_id, $catId)";
+		$stmt = $conn->prepare($query);
+		$stmt->execute();
+	}
+	header("Location: photos.php?id=$last_id");
 }
 else{
 	$photo_lisense = '';

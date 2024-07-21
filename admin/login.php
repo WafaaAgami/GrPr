@@ -36,9 +36,11 @@ catch (PDOException $e) {
   echo $DbName ;
   echo 'Wafaa';
   if($DbName != ""){
-  $_SESSION['username'] = $name;
+        $expire_date = time() + (86400 * 30);                    
+        setcookie('user_name', $f_name, $expire_date, '/');
+        $msg = "Welcome from cookie: " . $_COOKIE['user_name'];
     echo "Ol";
-    header("Location: ../index.php");
+    header("Location: Users.php");
     exit;	
   }
   
@@ -50,9 +52,11 @@ if(isset($_POST['Login1'])){
   $Password = $_POST['Password'];
   if($name != "" && $Password != "")
   {
-		$_SESSION['username'] = $name;
+		$expire_date = time() + (86400 * 30);                    
+        setcookie('user_name', $name, $expire_date, '/');
+        $msg = "Welcome from cookie: " . $_COOKIE['user_name'];
     echo "Ol";
-    header("Location: ../index.php");
+    header("Location: Users.php");
     exit;	
   }
   
@@ -70,7 +74,7 @@ if (isset($_POST['signup'])) {
         $expire_date = time() + (86400 * 30);                    
         setcookie('user_name', $f_name, $expire_date, '/');
         $msg = "Welcome from cookie: " . $_COOKIE['user_name'];
-        header('location: ../index.php');
+        header('location: Users.php');
     }
 
 }

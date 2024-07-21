@@ -1,7 +1,7 @@
 <?php
 error_reporting(0);
 include('../dbconnection.php');
-
+include('../SessionCheck.php');
 $data = $conn->query("SELECT * FROM users")->fetchAll();
 ?>
 

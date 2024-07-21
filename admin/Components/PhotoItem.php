@@ -1,3 +1,6 @@
+<?php
+	$categories = $conn->query("SELECT * FROM categories")->fetchAll();
+?>
 <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post" id="demo-form2" data-parsley-validate class="form-horizontal form-label-left" enctype="multipart/form-data">
 	<input type="hidden" id="ItemId" name="ItemId" />
 	<div class="item form-group">
@@ -29,13 +32,15 @@
 	</div>
 	
 	<div class="item form-group">
-		<label class="col-form-label col-md-3 col-sm-3 label-align" for="title">Tag <span class="required">*</span>
+		<label class="col-form-label col-md-3 col-sm-3 label-align" for="categoryIds">Tag <span class="required">*</span>
 		</label>
 		<div class="col-md-6 col-sm-6 ">
-			<select class="form-control" name="category" id="category">
-				<option value="">Select Tag</option>
-				<option value="cat1">Category 1</option>
-				<option value="cat2">Category 2</option>
+			<select class="form-control" required multiple size="6" name="categoryIds[]" id="categoryIds">
+			<?php	 
+				foreach ($categories as $row) {
+					echo "<option value='{$row["item_id"]}'>{$row["category_name"]}</option>";
+				}
+			?>
 			</select>
 		</div>
 	</div>
