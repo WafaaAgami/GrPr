@@ -13,13 +13,16 @@ CREATE TABLE categories (
   category_name VARCHAR(50) NOT NULL,
   PRIMARY KEY (item_id)
 );
-CREATE TABLE photos (
-  photo_id INT(11) AUTO_INCREMENT NOT NULL,
-  title VARCHAR(50) NOT NULL,
-  description VARCHAR(50) NOT NULL,
-  relativepath VARCHAR(50) NOT NULL,
-  active BIT DEFAULT NULL,
-  photo_date DATE NOT NULL,
-  PRIMARY KEY (photo_id)
+CREATE TABLE photos ( 
+  photo_id INT(11) AUTO_INCREMENT NOT NULL, 
+  title VARCHAR(50) NOT NULL, 
+  license VARCHAR(50) NOT NULL, 
+  format VARCHAR(50) NOT NULL, 
+  width int NOT NULL, 
+  height int NOT NULL, 
+  relativepath VARCHAR(50) NOT NULL, 
+  created_date DATETime NOT NULL, 
+  views int NOT NULL,
+  PRIMARY KEY (photo_id) 
 );
 

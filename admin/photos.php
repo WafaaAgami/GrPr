@@ -1,3 +1,9 @@
+<?php
+error_reporting(0);
+include('../dbconnection.php');
+
+$data = $conn->query("SELECT * FROM photos")->fetchAll();
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -85,9 +91,11 @@
                     <table id="datatable" class="table table-striped table-bordered" style="width:100%">
                       <thead>
                         <tr>
-                          <th>Photo Date</th>
                           <th>Title</th>
-                          <th>Active</th>
+                          <th>License</th>
+                          <th>Format</th>
+                          <th>Dimention</th>
+                          <th>Path</th>
                           <th>Edit</th>
                           <th>Delete</th>
                         </tr>
@@ -95,28 +103,21 @@
 
 
                       <tbody>
-                        <tr>
-                          <td>1 Jan 2023</td>
-                          <td>Title</td>
-                          <td>Yes</td>
-                          <td><img src="./images/edit.png" alt="Edit"></td>
-                          <td><img src="./images/delete.png" alt="Delete"></td>
-                        </tr>
-                        <tr>
-                          <td>1 Jan 2023</td>
-                          <td>Title</td>
-                          <td>Yes</td>
-                          <td><img src="./images/edit.png" alt="Edit"></td>
-                          <td><img src="./images/delete.png" alt="Delete"></td>
-                        </tr>
-                        <tr>
-                          <td>1 Jan 2023</td>
-                          <td>Title</td>
-                          <td>Yes</td>
-                          <td><img src="./images/edit.png" alt="Edit"></td>
-                          <td><img src="./images/delete.png" alt="Delete"></td>
-                        </tr>
-                        
+                        <?php
+                        foreach ($data as $row) {
+                          echo "
+                          <tr>
+                            <td>{$row['title']}</td>
+                            <td>{$row['license']}</td>
+                            <td>{$row['format']}</td>
+                            <td>{$row['width']} x {$row['height']}</td>
+                            <td>{$row['relativepath']}</td>
+                            <td><a href='./editPhoto.php?id={$row['photo_id']}'>Edit</a></td>
+                            <td><a href='./deletePhoto.php?id={$row['photo_id']}'>Delete</a></td>
+                          </tr>
+                          ";
+                        }
+                       ?>
                       </tbody>
                     </table>
                   </div>

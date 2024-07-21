@@ -1,3 +1,73 @@
+<?php
+error_reporting(0);
+include('../dbconnection.php');
+
+$id = $_GET['id'];
+if (isset($_POST['Update'])) 
+{
+	echo 'Post';
+	$id = $_POST['ItemId'];
+	$i_title = $_POST['title'];
+	$i_license = $_POST['license'];
+	$i_views = $_POST['views'];
+	if (!empty($_FILES) && isset($_FILES['fileToUpload']) && $_FILES['fileToUpload']['error'] === UPLOAD_ERR_OK) 
+	{
+		echo 'File Not Empty';
+		echo '<br /> '. isset($_FILES['fileToUpload']);
+		$target_dir = "../Uploads/"; // Directory where you want to save the uploaded file
+		$target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
+		$uploadOk = 1;
+		$imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+		
+		$timestamp = time(); // Current timestamp
+		$randomNumber = rand(1000, 9999); // Random number
+		$prefix = "file_";
+		
+		$target_file = $target_dir . $prefix . $timestamp . '_' . $randomNumber .".". $imageFileType;
+		
+		$i_format = $imageFileType;
+		$check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
+		$i_width = $check[0];
+		$i_height = $check[1];
+		
+		if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
+		    echo "The file ". htmlspecialchars( basename( $_FILES["fileToUpload"]["name"])). " has been uploaded.";
+		} 
+		else {
+		    echo "Sorry, there was an error uploading your file.";
+			header("Location: Error.php");
+		}
+	}
+	$query = "Update photos
+			SET title='$i_title',license='$i_license', views=$i_views
+			WHERE photo_id=$id";
+	$stmt = $conn->prepare($query);
+	$stmt->execute();
+	if($target_file != ""){
+		$query = "Update photos
+			SET format='$i_format',width=$i_width,height=$i_height, relativepath = '$target_file'
+			WHERE photo_id=$id";
+		$stmt = $conn->prepare($query);
+		$stmt->execute();
+	}
+	header("Location: photos.php");
+	
+}
+else if($id){
+		
+	$sql = "SELECT * FROM photos WHERE photo_id = $id";
+	$result = $conn->query($sql);
+	
+	foreach ($result as $row) 
+	{
+		$photo_lisense = $row['license'];
+		$photo_title = $row['title'];
+		$photo_views = $row['views'];
+	}
+	// $row = $result->fetch_assoc();	
+	
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -82,76 +152,19 @@
 								</div>
 								<div class="x_content">
 									<br />
-									<form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
-										<div class="item form-group">
-											<label class="col-form-label col-md-3 col-sm-3 label-align" for="photo-date">Photo Date <span class="required">*</span>
-											</label>
-											<div class="col-md-6 col-sm-6 ">
-												<input type="date" id="photo-date" required="required" class="form-control ">
-											</div>
-										</div>
-										<div class="item form-group">
-											<label class="col-form-label col-md-3 col-sm-3 label-align" for="title">Title <span class="required">*</span>
-											</label>
-											<div class="col-md-6 col-sm-6 ">
-												<input type="text" id="title" required="required" class="form-control ">
-											</div>
-										</div>
-										<div class="item form-group">
-											<label class="col-form-label col-md-3 col-sm-3 label-align" for="license">License <span class="required">*</span>
-											</label>
-											<div class="col-md-6 col-sm-6 ">
-												<textarea id="content" name="license" required="required" class="form-control">License</textarea>
-											</div>
-										</div>
-										<div class="item form-group">
-											<label for="dimension" class="col-form-label col-md-3 col-sm-3 label-align">Dimension <span class="required">*</span></label>
-											<div class="col-md-6 col-sm-6 ">
-												<input id="dimension" class="form-control" type="text" name="dimension" required="required">
-											</div>
-										</div>
-										<div class="item form-group">
-											<label for="format" class="col-form-label col-md-3 col-sm-3 label-align">Format <span class="required">*</span></label>
-											<div class="col-md-6 col-sm-6 ">
-												<input id="format" class="form-control" type="text" name="format" required="required">
-											</div>
-										</div>
-										<div class="item form-group">
-											<label class="col-form-label col-md-3 col-sm-3 label-align">Active</label>
-											<div class="checkbox">
-												<label>
-													<input type="checkbox" class="flat">
-												</label>
-											</div>
-										</div>
-										<div class="item form-group">
-											<label class="col-form-label col-md-3 col-sm-3 label-align" for="image">Image <span class="required">*</span>
-											</label>
-											<div class="col-md-6 col-sm-6 ">
-												<input type="file" id="image" name="image" required="required" class="form-control">
-											</div>
-										</div>
-
-										<div class="item form-group">
-											<label class="col-form-label col-md-3 col-sm-3 label-align" for="title">Tag <span class="required">*</span>
-											</label>
-											<div class="col-md-6 col-sm-6 ">
-												<select class="form-control" name="category" id="">
-													<option value=" ">Select Tag</option>
-													<option value="cat1">Category 1</option>
-													<option value="cat2">Category 2</option>
-												</select>
-											</div>
-										</div>
-										<div class="ln_solid"></div>
-										<div class="item form-group">
-											<div class="col-md-6 col-sm-6 offset-md-3">
-												<button class="btn btn-primary" type="button">Cancel</button>
-												<button type="submit" class="btn btn-success">Add</button>
-											</div>
-										</div>
-
-									</form>
+									<?php
+                                        include('Components/PhotoItem.php');
+                                    ?>
+									<script>
+										var element = document.getElementById("AddBtn");
+										element.name = 'Update';
+										element.textContent = "Update";
+										var element = document.getElementById("ItemId");
+										element.value = '<?php echo $id?>';
+										var e = document.getElementById("fileToUpload");
+										e.removeAttribute('required');
+										//UserId
+									</script>
 								</div>
 							</div>
 						</div>

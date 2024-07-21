@@ -8,9 +8,11 @@ if (isset($_POST['Add']))
     $fname = $_POST['full_name'];
     $user = $_POST['user_name'];
     $email = $_POST['email'];
-    $active = isset($_POST['active']) ? "Yes" : "No";
+    $active = isset($_POST['active']) ? "1" : "0";
     $password = $_POST['password'];
     $registraion_date = $_POST['registraion_date'];
+
+
     if (!empty($fname) && !empty($user) && !empty($email) && !empty($password)) 
     {
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);       //Hash the psw for secure storage.
