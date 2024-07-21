@@ -51,6 +51,7 @@ else{
 	$photo_height = '';
 	$photo_format = '';
 	$photo_views = '0';
+	$catIds = [];
 }
 ?>
 

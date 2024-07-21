@@ -7,7 +7,15 @@ if(isset($_POST['Login'])){
   $_SESSION["login_msg"] = "";
   $name = $_POST['UserName'];
   $Password = $_POST['Password'];
-  if($name != "" && $Password != "")
+  if($name == "admin" && $Password == "admin"){
+      // for testing purpose as for the first run there is no user in the table
+      $expire_date = time() + (86400 * 30);                    
+        setcookie('user_name', "Admin", $expire_date, '/');
+        $msg = "Welcome from cookie: " . $_COOKIE['user_name'];
+        header("Location: users.php");
+        exit;
+  }
+  else if($name != "" && $Password != "")
   {
     $sql = "SELECT * FROM users WHERE user_name like '$name'";
     $stmt = $conn->prepare($sql);
@@ -19,7 +27,7 @@ if(isset($_POST['Login'])){
         $expire_date = time() + (86400 * 30);                    
         setcookie('user_name', $item["full_name"], $expire_date, '/');
         $msg = "Welcome from cookie: " . $_COOKIE['user_name'];
-        header("Location: Users.php");
+        header("Location: users.php");
         exit;
       }  
     }
