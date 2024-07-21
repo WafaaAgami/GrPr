@@ -3,7 +3,7 @@ CREATE TABLE users (
   full_name VARCHAR(50) NOT NULL,
   user_name VARCHAR(50) NOT NULL,
   email VARCHAR(50) NOT NULL,
-  password VARCHAR(50) NOT NULL,
+  password VARCHAR(255) NOT NULL,
   active BIT DEFAULT NULL,
   registration_date DATE NOT NULL,
   PRIMARY KEY (user_id)
@@ -30,10 +30,10 @@ CREATE TABLE photosCategories (
     photo_id INT,
     Category_id INT,
     FOREIGN KEY (photo_id) REFERENCES photos(photo_id)
-        ON DELETE SET NULL
+        ON DELETE RESTRICT
         ON UPDATE CASCADE,
     FOREIGN KEY (Category_id) REFERENCES categories(item_id)
-        ON DELETE SET NULL
+        ON DELETE RESTRICT
         ON UPDATE CASCADE
 );
 

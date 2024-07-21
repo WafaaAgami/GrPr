@@ -1,20 +1,6 @@
 <?php
 include('dbconnection.php');
-//$users = $conn->query('SELECT * FROM users')->fetchAll();
-session_start ();
-echo $_SESSION['username'];
-if (!isset ($_SESSION['username'])) {
-    $_SESSION['msg'] = "You must log in first";
-    header('location: login.php');
-}
-if (isset($_GET['logout'])) {
-   session_destroy();
-    unset ($_SESSION['username']);
-    header("location: login.php");
-}
 $data = $conn->query("SELECT * FROM photos order by created_date DESC")->fetchAll();
-
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -42,34 +28,9 @@ https://templatemo.com/tm-556-catalog-z
         <div class="loader-section section-right"></div>
 
     </div>
-    <nav class="navbar navbar-expand-lg">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">
-                <i class="fas fa-film mr-2"></i>
-                Catalog-Z
-            </a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <i class="fas fa-bars"></i>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ml-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link nav-link-1 active" aria-current="page" href="index.php">Photos</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link nav-link-2" href="videos.html">Videos</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link nav-link-3" href="about.html">About</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link nav-link-4" href="contact.html">Contact</a>
-                </li>
-            </ul>
-            </div>
-        </div>
-    </nav>
-
+    <?php
+        include('WebsiteMenu.php');    
+    ?>
     <div class="tm-hero d-flex justify-content-center align-items-center" data-parallax="scroll" data-image-src="img/hero.jpg">
         <form class="d-flex tm-search-form">
             <input class="form-control tm-search-input" type="search" placeholder="Search" aria-label="Search">
@@ -93,7 +54,7 @@ https://templatemo.com/tm-556-catalog-z
                     <img src='{$row["relativepath"]}' alt='Image' class='img-fluid'>
                     <figcaption class='d-flex align-items-center justify-content-center'>
                         <h2>{$row["title"]}</h2>
-                        <a href='photo-detail.html'>View more</a>
+                        <a href='photo-detail.php?id={$row["photo_id"]}'>View more</a>
                     </figcaption>                    
                 </figure>
                 <div class='d-flex justify-content-between tm-text-gray'>

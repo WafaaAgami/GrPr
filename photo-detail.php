@@ -1,3 +1,25 @@
+<?php
+    error_reporting(0);
+    include('dbconnection.php');
+    $id = $_GET['id'];
+    try{
+        $sql = "SELECT * FROM photos where photo_id=$id";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $item = $stmt->fetch();
+        
+        if($item["title"]){
+
+        }
+        else{
+            header("Location: Error.php");
+        }
+        $tags = $conn->query("select * from categories where item_id in (select Category_id from photoscategories where photo_id =$id)")->fetchAll();
+    }
+    catch(err){
+        header("Location: Error.php");
+    }
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,33 +46,9 @@ https://templatemo.com/tm-556-catalog-z
         <div class="loader-section section-right"></div>
 
     </div>
-    <nav class="navbar navbar-expand-lg">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="index.html">
-                <i class="fas fa-film mr-2"></i>
-                Catalog-Z
-            </a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <i class="fas fa-bars"></i>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ml-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link nav-link-1 active" aria-current="page" href="index.html">Photos</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link nav-link-2" href="videos.html">Videos</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link nav-link-3" href="about.html">About</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link nav-link-4" href="contact.html">Contact</a>
-                </li>
-            </ul>
-            </div>
-        </div>
-    </nav>
+   <?php
+        include('WebsiteMenu.php');    
+    ?>
 
     <div class="tm-hero d-flex justify-content-center align-items-center" data-parallax="scroll" data-image-src="img/hero.jpg">
         <form class="d-flex tm-search-form">
@@ -63,11 +61,11 @@ https://templatemo.com/tm-556-catalog-z
 
     <div class="container-fluid tm-container-content tm-mt-60">
         <div class="row mb-4">
-            <h2 class="col-12 tm-text-primary">Photo title goes here</h2>
+            <h2 class="col-12 tm-text-primary"><?php echo $item["title"]?></h2>
         </div>
         <div class="row tm-mb-90">            
             <div class="col-xl-8 col-lg-7 col-md-6 col-sm-12">
-                <img src="img/img-01-big.jpg" alt="Image" class="img-fluid">
+                <img src="<?php echo $item["relativepath"]?>" style="width:100%" alt="Image" class="img-fluid">
             </div>
             <div class="col-xl-4 col-lg-5 col-md-6 col-sm-12">
                 <div class="tm-bg-gray tm-video-details">
@@ -79,25 +77,24 @@ https://templatemo.com/tm-556-catalog-z
                     </div>                    
                     <div class="mb-4 d-flex flex-wrap">
                         <div class="mr-4 mb-2">
-                            <span class="tm-text-gray-dark">Dimension: </span><span class="tm-text-primary">1920x1080</span>
+                            <span class="tm-text-gray-dark">Dimension: </span><span class="tm-text-primary"><?php echo $item["width"]?> x <?php echo $item["height"]?></span>
                         </div>
                         <div class="mr-4 mb-2">
-                            <span class="tm-text-gray-dark">Format: </span><span class="tm-text-primary">JPG</span>
+                            <span class="tm-text-gray-dark">Format: </span><span class="tm-text-primary"><?php echo $item["format"]?></span>
                         </div>
                     </div>
                     <div class="mb-4">
                         <h3 class="tm-text-gray-dark mb-3">License</h3>
-                        <p>Free for both personal and commercial use. No need to pay anything. No need to make any attribution.</p>
+                        <p><?php echo $item["license"]?></p>
                     </div>
                     <div>
                         <h3 class="tm-text-gray-dark mb-3">Tags</h3>
-                        <a href="#" class="tm-text-primary mr-4 mb-2 d-inline-block">Cloud</a>
-                        <a href="#" class="tm-text-primary mr-4 mb-2 d-inline-block">Bluesky</a>
-                        <a href="#" class="tm-text-primary mr-4 mb-2 d-inline-block">Nature</a>
-                        <a href="#" class="tm-text-primary mr-4 mb-2 d-inline-block">Background</a>
-                        <a href="#" class="tm-text-primary mr-4 mb-2 d-inline-block">Timelapse</a>
-                        <a href="#" class="tm-text-primary mr-4 mb-2 d-inline-block">Night</a>
-                        <a href="#" class="tm-text-primary mr-4 mb-2 d-inline-block">Real Estate</a>
+                        <?php
+                            foreach ($tags as $tag) {
+                                echo "<a href='#' class='tm-text-primary mr-4 mb-2 d-inline-block'>{$tag["category_name"]}</a>";
+                            }
+                        ?>
+                        
                     </div>
                 </div>
             </div>

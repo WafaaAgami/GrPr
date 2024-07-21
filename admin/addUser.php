@@ -1,8 +1,8 @@
 <?php
 error_reporting(0);
 include('../dbconnection.php');
+include('../SessionCheck.php');
 
-// Test
 if (isset($_POST['Add'])) 
 {
     $fname = $_POST['full_name'];
@@ -15,7 +15,8 @@ if (isset($_POST['Add']))
 
     if (!empty($fname) && !empty($user) && !empty($email) && !empty($password)) 
     {
-        $hashed_password = password_hash($password, PASSWORD_DEFAULT);       //Hash the psw for secure storage.
+        $hashed_password = password_hash($password, $PASSWORD_DEFAULT); 
+        
         $query = "INSERT INTO users(full_name,user_name,email,password,active, registraion_date) VALUES ('$fname','$user','$email','$hashed_password','$active', '$registraion_date')";
         //Execute query.
         $stmt = $conn->prepare($query);

@@ -1,112 +1,48 @@
 <?php
 error_reporting(0);
-include('./dbconnection.php');
+include('../dbconnection.php');
 session_start();                           
-$f_name = "";
-$email = "";
-$pw = "";
-$msg = "";
 
 if(isset($_POST['Login'])){
+  $_SESSION["login_msg"] = "";
   $name = $_POST['UserName'];
   $Password = $_POST['Password'];
   if($name != "" && $Password != "")
   {
-    echo 'Yes';
-    $hashed_password = password_hash($Password, PASSWORD_DEFAULT);
-
-    $sql = "SELECT * FROM users WHERE user_name = 'Wafaa1'";
-    // $sql = "SELECT * FROM users WHERE user_name like '$name' and password = '$hashed_password'";
-    echo $sql;
-    try{
-      $result = $conn->query($sql);
-      
-echo 'Yes 2';
-	$DbName = '';
-	foreach ($result as $row) {
-    echo 'L';
-   $DbName = $row['full_name'];
-  } 
-}
-catch (PDOException $e) {
-    // Handle database query errors
-    echo "Error executing query: " . $e->getMessage();
-}
+    $sql = "SELECT * FROM users WHERE user_name like '$name'";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute();
+    $item = $stmt->fetch();
+    
+    if($item["full_name"]){
+      if(password_verify($Password, $item["password"])){
+        $expire_date = time() + (86400 * 30);                    
+        setcookie('user_name', $item["full_name"], $expire_date, '/');
+        $msg = "Welcome from cookie: " . $_COOKIE['user_name'];
+        header("Location: Users.php");
+        exit;
+      }  
+    }
 	}
-  echo $DbName ;
-  echo 'Wafaa';
-  if($DbName != ""){
-        $expire_date = time() + (86400 * 30);                    
-        setcookie('user_name', $f_name, $expire_date, '/');
-        $msg = "Welcome from cookie: " . $_COOKIE['user_name'];
-    echo "Ol";
-    header("Location: Users.php");
-    exit;	
-  }
-  
-  echo 'Invalid Username or password';  
-    }
-
-if(isset($_POST['Login1'])){
-  $name = $_POST['UserName'];
-  $Password = $_POST['Password'];
-  if($name != "" && $Password != "")
-  {
-		$expire_date = time() + (86400 * 30);                    
-        setcookie('user_name', $name, $expire_date, '/');
-        $msg = "Welcome from cookie: " . $_COOKIE['user_name'];
-    echo "Ol";
-    header("Location: Users.php");
-    exit;	
-  }
-  
-  echo 'Invalid Username or password';  
+  $_SESSION["login_msg"] = 'Invalid Username or password';
 }
-//if ($_SERVER['REQUEST_METHOD'] = 'POST') {
-if (isset($_POST['signup'])) {
-    $f_name = $_POST['full_name'];
-    $email = $_POST['email'];
-    $pw = $_POST['pwd'];
-    if (!empty($f_name) && !empty($email) && !empty($pw)) {
-        //$_SESSION['user_name'] = $f_name;                
-        //$_SESSION['email'] = $email
-        //$msg = "Welcome " . $_SESSION['user_name'];
-        $expire_date = time() + (86400 * 30);                    
-        setcookie('user_name', $f_name, $expire_date, '/');
-        $msg = "Welcome from cookie: " . $_COOKIE['user_name'];
-        header('location: Users.php');
-    }
 
-}
-/*error_reporting(0);
-include('./dbconnection.php');
-if (isset($_POST[login_user])) {
-  $username = mysqli_real_escape_string ($db, $_POST['username']);
-  $password = li_real_escape_string ($db, $_POST['password']);
+// if (isset($_POST['signup'])) {
+//     $f_name = $_POST['full_name'];
+//     $email = $_POST['email'];
+//     $pw = $_POST['pwd'];
+//     if (!empty($f_name) && !empty($email) && !empty($pw)) {
+//         //$_SESSION['user_name'] = $f_name;                
+//         //$_SESSION['email'] = $email
+//         //$msg = "Welcome " . $_SESSION['user_name'];
+//         $expire_date = time() + (86400 * 30);                    
+//         setcookie('user_name', $f_name, $expire_date, '/');
+//         $msg = "Welcome from cookie: " . $_COOKIE['user_name'];
+//         header('location: Users.php');
+//     }
 
-  if (empty($username)) {
-    array_push ($errors, "Username is required");
-  }
-  if (empty($password)) {
-    array_push($errors, "Password is required");
-  }
-  if (count($errors) == 0) {
-    $password = md5($password);
-    $query = "SELECT * FROM users WHERE username= '$username' AND
-    password= '$password";
-    $results = mysqli_query($db, $query);
-    if (mysqli_num_rows ($results) == 1) {
-      $_SESSION['userna,e'] = $username;
-      $_SESSION['success'] = "You are now logged in";
-      header('location: index.php');
-    }else {
-      array_push($errors, "Wrong username/password combination");
-    }
+// }
 
-    }
-      
-      
-  }*/
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -133,6 +69,7 @@ if (isset($_POST[login_user])) {
   </head>
 
   <body class="login">
+    <p><?php echo $_SESSION["login_msg"] ?></p>
     <div>
       <a class="hiddenanchor" id="signup"></a>
       <a class="hiddenanchor" id="signin"></a>
@@ -149,16 +86,16 @@ if (isset($_POST[login_user])) {
                 <input type="password" class="form-control" placeholder="Password" id="Password" name="Password" required="" />
               </div>
               <div>
-                <button class="btn btn-default submit" type="submit" name="Login1">Log in</button>
+                <button class="btn btn-default submit" type="submit" name="Login">Log in</button>
                 <a class="reset_pass" href="#">Lost your password?</a>
               </div>
 
               <div class="clearfix"></div>
 
               <div class="separator">
-                <p class="change_link">New to site?
+                <!-- <p class="change_link">New to site?
                   <a href="#signup" class="to_register"> Create Account </a>
-                </p>
+                </p> -->
 
                 <div class="clearfix"></div>
                 <br />

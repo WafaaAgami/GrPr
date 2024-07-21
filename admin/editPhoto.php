@@ -74,6 +74,13 @@ else if($id){
 		$photo_title = $row['title'];
 		$photo_views = $row['views'];
 	}
+	$sql = "SELECT * FROM photoscategories WHERE photo_id = $id";
+	$result = $conn->query($sql);
+	$catIds = [];
+	foreach ($result as $row) 
+	{
+		$catIds[] = $row['Category_id'];
+	}
 	// $row = $result->fetch_assoc();	
 	
 }

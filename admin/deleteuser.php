@@ -1,7 +1,7 @@
 <?php
 error_reporting(0);
 include('../dbconnection.php');
-
+include('../SessionCheck.php');
 $id = $_GET['id'];
 echo 'To delete User '. $id;
 $query = "delete from users where user_id=$id";

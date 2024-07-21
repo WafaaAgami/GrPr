@@ -1,7 +1,7 @@
 <?php
 error_reporting(0);
 include('../dbconnection.php');
-
+include('../SessionCheck.php');
 $id = $_GET['id'];
 if (isset($_POST['Update'])) 
 {

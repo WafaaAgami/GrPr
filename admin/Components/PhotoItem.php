@@ -38,7 +38,8 @@
 			<select class="form-control" required multiple size="6" name="categoryIds[]" id="categoryIds">
 			<?php	 
 				foreach ($categories as $row) {
-					echo "<option value='{$row["item_id"]}'>{$row["category_name"]}</option>";
+					$selected = in_array($row["item_id"], $catIds) ? ' selected' : '';
+					echo "<option value='{$row["item_id"]}' $selected>{$row["category_name"]}</option>";
 				}
 			?>
 			</select>

@@ -1,7 +1,7 @@
 <?php
 error_reporting(0);
 include('../dbconnection.php');
-
+include('../SessionCheck.php');
 if (isset($_POST['Add'])) 
 {
     $itemname = $_POST['item_name'];

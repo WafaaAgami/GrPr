@@ -1,6 +1,7 @@
 <?php
 error_reporting(0);
 include('../dbconnection.php');
+include('../SessionCheck.php');
 if (isset($_POST['Add'])) 
 {
     $i_title = $_POST['title'];
