@@ -8,7 +8,7 @@ if (isset($_POST['Add']))
 	$i_license = $_POST['license'];
 	$i_views = $_POST['views'];
 	
-	$target_dir = "../Uploads/"; // Directory where you want to save the uploaded file
+	$target_dir = "../img/"; // Directory where you want to save the uploaded file
 	$target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
 	$uploadOk = 1;
 	$imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
@@ -17,8 +17,8 @@ if (isset($_POST['Add']))
 	$randomNumber = rand(1000, 9999); // Random number
 	$prefix = "file_";
 	
-	$target_file = $target_dir . $prefix . $timestamp . '_' . $randomNumber .".". $imageFileType;
-	
+	$newfilename = $prefix . $timestamp . '_' . $randomNumber .".". $imageFileType;
+	$target_file = $target_dir . $newfilename;
 	$i_format = $imageFileType;
 	$check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
 	$i_width = $check[0];
@@ -32,7 +32,7 @@ if (isset($_POST['Add']))
 		header("Location: Error.php");
 	}
 
-	$query = "INSERT INTO photos(title,license,width,height,views, format, created_date, relativepath ) VALUES ('$i_title', '$i_license', $i_width, $i_height, $i_views, '$i_format',NOW(), '$target_file')";
+	$query = "INSERT INTO photos(title,license,width,height,views, format, created_date, relativepath ) VALUES ('$i_title', '$i_license', $i_width, $i_height, $i_views, '$i_format',NOW(), 'img/$newfilename')";
 	$stmt = $conn->prepare($query);
 	$stmt->execute();
 	header("Location: photos.php");

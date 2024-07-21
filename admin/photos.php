@@ -95,7 +95,7 @@ $data = $conn->query("SELECT * FROM photos")->fetchAll();
                           <th>License</th>
                           <th>Format</th>
                           <th>Dimention</th>
-                          <th>Path</th>
+                          <th>Image</th>
                           <th>Edit</th>
                           <th>Delete</th>
                         </tr>
@@ -111,7 +111,7 @@ $data = $conn->query("SELECT * FROM photos")->fetchAll();
                             <td>{$row['license']}</td>
                             <td>{$row['format']}</td>
                             <td>{$row['width']} x {$row['height']}</td>
-                            <td>{$row['relativepath']}</td>
+                            <td><img src='../{$row['relativepath']}' style='max-width:100px' alt='Image' /></td>
                             <td><a href='./editPhoto.php?id={$row['photo_id']}'>Edit</a></td>
                             <td><a href='./deletePhoto.php?id={$row['photo_id']}'>Delete</a></td>
                           </tr>

@@ -16,7 +16,7 @@ CREATE TABLE categories (
 CREATE TABLE photos ( 
   photo_id INT(11) AUTO_INCREMENT NOT NULL, 
   title VARCHAR(50) NOT NULL, 
-  license VARCHAR(50) NOT NULL, 
+  license longtext NOT NULL, 
   format VARCHAR(50) NOT NULL, 
   width int NOT NULL, 
   height int NOT NULL, 

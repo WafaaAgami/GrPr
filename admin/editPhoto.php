@@ -14,7 +14,7 @@ if (isset($_POST['Update']))
 	{
 		echo 'File Not Empty';
 		echo '<br /> '. isset($_FILES['fileToUpload']);
-		$target_dir = "../Uploads/"; // Directory where you want to save the uploaded file
+		$target_dir = "../img/"; // Directory where you want to save the uploaded file
 		$target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
 		$uploadOk = 1;
 		$imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
@@ -22,8 +22,8 @@ if (isset($_POST['Update']))
 		$timestamp = time(); // Current timestamp
 		$randomNumber = rand(1000, 9999); // Random number
 		$prefix = "file_";
-		
-		$target_file = $target_dir . $prefix . $timestamp . '_' . $randomNumber .".". $imageFileType;
+		$newfilename = $prefix . $timestamp . '_' . $randomNumber .".". $imageFileType;
+		$target_file = $target_dir . $newfilename;
 		
 		$i_format = $imageFileType;
 		$check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
@@ -45,7 +45,7 @@ if (isset($_POST['Update']))
 	$stmt->execute();
 	if($target_file != ""){
 		$query = "Update photos
-			SET format='$i_format',width=$i_width,height=$i_height, relativepath = '$target_file'
+			SET format='$i_format',width=$i_width,height=$i_height, relativepath = 'img/$newfilename'
 			WHERE photo_id=$id";
 		$stmt = $conn->prepare($query);
 		$stmt->execute();
