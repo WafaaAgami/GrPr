@@ -3,24 +3,24 @@ error_reporting(0);
 include('../dbconnection.php');
 
 $id = $_GET['id'];
-echo $_POST['Update'];
+echo $_POST['full_name'];
 echo isset($_POST['Update']);
 if (isset($_POST['Update'])) {
-	
+	$id = $_POST['UserId'];
   $fname = $_POST['full_name'];
-  $user = $_POST['user-name'];
+  $user = $_POST['user_name'];
   $email = $_POST['email'];
-  $active = isset($_POST['active']) ? "Yes" : "No";
+  $active = isset($_POST['active']) ? "1" : "0";
   $password = $_POST['password'];
-$registraion_date = $_POST['registraion_date'];
+  $registraion_date = $_POST['registraion_date'];
   if (!empty($fname) && !empty($user) && !empty($email) && !empty($password)) {
 	$hashed_password = password_hash($password, PASSWORD_DEFAULT);
 	echo '<br />Update';
     $sql = "UPDATE users
-  SET full_name='$fname',user_name='$user',email='$email',active='$active',
+  SET full_name='$fname',user_name='$user',email='$email',active=$active,
   password='$hashed_password', registraion_date = '$registraion_date'
   WHERE user_id=$id";
-
+  echo $sql;
     $stmt = $conn->prepare($sql);
     $stmt->execute();
 
@@ -28,9 +28,11 @@ $registraion_date = $_POST['registraion_date'];
 
 	header("Location: users.php");
   }
+  else{
+	  header("Location: Error.php");
+  }
 }
-else{
-	
+else if($id){
 	
 	try{
 		
@@ -40,8 +42,8 @@ else{
 	foreach ($result as $row) {
 			
 			$fullname = $row['full_name'];
-			$username = $row['user_name'];
-			$email = $row['email'];
+			$user_name = $row['user_name'];
+			$user_email = $row['email'];
 			$active = $row['active'];
 			$registraion_date = $row['registraion_date'];
 			// $password = $row['password'];
@@ -93,168 +95,9 @@ else{
 <body class="nav-md">
 	<div class="container body">
 		<div class="main_container">
-			<div class="col-md-3 left_col">
-				<div class="left_col scroll-view">
-					<div class="navbar nav_title" style="border: 0;">
-						<a href="index.html" class="site_title"><i class="fa fa-file-image-o"></i> <span>Images Admin</span></a>
-					</div>
-
-					<div class="clearfix"></div>
-
-					<!-- menu profile quick info -->
-					<div class="profile clearfix">
-						<div class="profile_pic">
-							<img src="images/img.jpg" alt="..." class="img-circle profile_img">
-						</div>
-						<div class="profile_info">
-							<span>Welcome,</span>
-							<h2>John Doe</h2>
-						</div>
-					</div>
-					<!-- /menu profile quick info -->
-
-					<br />
-
-					<!-- sidebar menu -->
-					<div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
-						<div class="menu_section">
-							<h3>General</h3>
-							<ul class="nav side-menu">
-								<li><a><i class="fa fa-users"></i> Users <span class="fa fa-chevron-down"></span></a>
-									<ul class="nav child_menu">
-										<li><a href="users.html">Users List</a></li>
-										<li><a href="addUser.html">Add User</a></li>
-									</ul>
-								</li>
-								<li><a><i class="fa fa-edit"></i> Tags <span class="fa fa-chevron-down"></span></a>
-									<ul class="nav child_menu">
-										<li><a href="addCategory.html">Add Tag</a></li>
-										<li><a href="categories.html">Tags List</a></li>
-									</ul>
-								</li>
-								<li><a><i class="fa fa-desktop"></i> Photos <span class="fa fa-chevron-down"></span></a>
-									<ul class="nav child_menu">
-										<li><a href="addPhoto.html">Add Photo</a></li>
-										<li><a href="photos.html">Photos List</a></li>
-									</ul>
-								</li>
-							</ul>
-						</div>
-
-					</div>
-					<!-- /sidebar menu -->
-
-					<!-- /menu footer buttons -->
-					<div class="sidebar-footer hidden-small">
-						<a data-toggle="tooltip" data-placement="top" title="Settings">
-							<span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
-						</a>
-						<a data-toggle="tooltip" data-placement="top" title="FullScreen">
-							<span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
-						</a>
-						<a data-toggle="tooltip" data-placement="top" title="Lock">
-							<span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
-						</a>
-						<a data-toggle="tooltip" data-placement="top" title="Logout" href="login.html">
-							<span class="glyphicon glyphicon-off" aria-hidden="true"></span>
-						</a>
-					</div>
-					<!-- /menu footer buttons -->
-				</div>
-			</div>
-
-			<!-- top navigation -->
-			<div class="top_nav">
-				<div class="nav_menu">
-					<div class="nav toggle">
-						<a id="menu_toggle"><i class="fa fa-bars"></i></a>
-					</div>
-					<nav class="nav navbar-nav">
-						<ul class=" navbar-right">
-							<li class="nav-item dropdown open" style="padding-left: 15px;">
-								<a href="javascript:;" class="user-profile dropdown-toggle" aria-haspopup="true" id="navbarDropdown" data-toggle="dropdown" aria-expanded="false">
-									<img src="images/img.jpg" alt="">John Doe
-								</a>
-								<div class="dropdown-menu dropdown-usermenu pull-right" aria-labelledby="navbarDropdown">
-									<a class="dropdown-item" href="javascript:;"> Profile</a>
-									<a class="dropdown-item" href="javascript:;">
-										<span class="badge bg-red pull-right">50%</span>
-										<span>Settings</span>
-									</a>
-									<a class="dropdown-item" href="javascript:;">Help</a>
-									<a class="dropdown-item" href="login.html"><i class="fa fa-sign-out pull-right"></i> Log Out</a>
-								</div>
-							</li>
-
-							<li role="presentation" class="nav-item dropdown open">
-								<a href="javascript:;" class="dropdown-toggle info-number" id="navbarDropdown1" data-toggle="dropdown" aria-expanded="false">
-									<i class="fa fa-envelope-o"></i>
-									<span class="badge bg-green">6</span>
-								</a>
-								<ul class="dropdown-menu list-unstyled msg_list" role="menu" aria-labelledby="navbarDropdown1">
-									<li class="nav-item">
-										<a class="dropdown-item">
-											<span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
-											<span>
-												<span>John Smith</span>
-												<span class="time">3 mins ago</span>
-											</span>
-											<span class="message">
-												Film festivals used to be do-or-die moments for movie makers. They were where...
-											</span>
-										</a>
-									</li>
-									<li class="nav-item">
-										<a class="dropdown-item">
-											<span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
-											<span>
-												<span>John Smith</span>
-												<span class="time">3 mins ago</span>
-											</span>
-											<span class="message">
-												Film festivals used to be do-or-die moments for movie makers. They were where...
-											</span>
-										</a>
-									</li>
-									<li class="nav-item">
-										<a class="dropdown-item">
-											<span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
-											<span>
-												<span>John Smith</span>
-												<span class="time">3 mins ago</span>
-											</span>
-											<span class="message">
-												Film festivals used to be do-or-die moments for movie makers. They were where...
-											</span>
-										</a>
-									</li>
-									<li class="nav-item">
-										<a class="dropdown-item">
-											<span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
-											<span>
-												<span>John Smith</span>
-												<span class="time">3 mins ago</span>
-											</span>
-											<span class="message">
-												Film festivals used to be do-or-die moments for movie makers. They were where...
-											</span>
-										</a>
-									</li>
-									<li class="nav-item">
-										<div class="text-center">
-											<a class="dropdown-item">
-												<strong>See All Alerts</strong>
-												<i class="fa fa-angle-right"></i>
-											</a>
-										</div>
-									</li>
-								</ul>
-							</li>
-						</ul>
-					</nav>
-				</div>
-			</div>
-			<!-- /top navigation -->
+			<?php
+            include('Components/Menu.php');
+           ?>
 
 			<!-- page content -->
 			<div class="right_col" role="main">
@@ -300,59 +143,17 @@ else{
 								</div>
 								<div class="x_content">
 									<br />
-									<form action="<?php 'PHP_SELF' ?>" method="post" id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
-
-										<div class="item form-group">
-											<label class="col-form-label col-md-3 col-sm-3 label-align" for="full_name">Full Name <span class="required">*</span>
-											</label>
-											<div class="col-md-6 col-sm-6 ">
-												<input type="text" id="full_name" required="required" class="form-control " name="full_name" value="<?php echo $fullname; ?>">
-											</div>
-										</div>
-										<div class="item form-group">
-											<label class="col-form-label col-md-3 col-sm-3 label-align" for="user-name">Username <span class="required">*</span>
-											</label>
-											<div class="col-md-6 col-sm-6 ">
-												<input type="text" id="user-name" name="user-name" required="required" class="form-control" value="<?php echo $username; ?>">
-											</div>
-										</div>
-										<div class="item form-group">
-											<label for="email" class="col-form-label col-md-3 col-sm-3 label-align">Email <span class="required">*</span></label>
-											<div class="col-md-6 col-sm-6 ">
-												<input id="email" class="form-control" type="email" name="email" required="required" value="<?php echo $email; ?>">
-											</div>
-										</div>
-										<div class="item form-group">
-											<label class="col-form-label col-md-3 col-sm-3 label-align">Active</label>
-											<div class="checkbox">
-												<label>
-													<input type="checkbox" class="flat" name="active" value="<?php echo $active; ?>"> 
-												</label>
-											</div>
-										</div>
-										<div class="item form-group">
-											<label class="col-form-label col-md-3 col-sm-3 label-align" for="password" >Password <span class="required">*</span>
-											</label>
-											<div class="col-md-6 col-sm-6 ">
-												<input type="password" id="password" name="password" required="required" class="form-control" value="<?php echo $password; ?>">
-											</div>
-										</div>
-										<div class="item form-group">
-											<label class="col-form-label col-md-3 col-sm-3 label-align" for="registraion_date" >Registraion Date <span class="required">*</span>
-											</label>
-											<div class="col-md-6 col-sm-6 ">
-												<input type="date" id="registraion_date" name="registraion_date" required="required" class="form-control" value="<?php echo $registraion_date; ?>">
-											</div>
-										</div>
-										<div class="ln_solid"></div>
-										<div class="item form-group">
-											<div class="col-md-6 col-sm-6 offset-md-3">
-												<button class="btn btn-primary" type="button" name="Cancel">Cancel</button>
-												<button type="submit" class="btn btn-success" name="Update">Update</button>
-											</div>
-										</div>
-
-									</form>
+									<?php
+                                        include('Components/UserItem.php');
+                                    ?>
+									<script>
+										var element = document.getElementById("AddBtn");
+										element.name = 'Update';
+										element.textContent = "Update";
+										var element = document.getElementById("UserId");
+										element.value = '<?php echo $id?>';
+										//UserId
+									</script>
 								</div>
 							</div>
 						</div>

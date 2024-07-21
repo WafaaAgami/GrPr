@@ -14,8 +14,8 @@ try {
         PDO::ATTR_ERRMODE,
         PDO::ERRMODE_EXCEPTION
     );
-    echo "Connected Successfully";
+    echo "<script>console.log('Debug - Connected Successfully');</script>";
 } catch (PDOExeption $e) {
-    echo "Connection error: " . $e->getMessage();
+    echo "<script>console.log('Debug:Connection error: " . $e->getMessage() . "')</script>";
 }
 ?>
